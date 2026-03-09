@@ -20,7 +20,7 @@ pub fn build_data_to_send(data: Vec<u8>, theta: Option<u8>) -> Vec<u8> {
     data_to_send
 }
 
-pub fn build_polynomial(data: &[u8], theta_val: u8) -> u8 {
+fn build_polynomial(data: &[u8], theta_val: u8) -> u8 {
     let mut return_val = 0u8;
 
     for (i, byte) in data.iter().enumerate() {
@@ -30,10 +30,50 @@ pub fn build_polynomial(data: &[u8], theta_val: u8) -> u8 {
     return_val
 }
 
-pub fn gf_multiplication(data_a: u8, data_b: u8) -> u8 {
-    todo!()
+fn gf_multiplication(mut data_a: u8, mut data_b: u8) -> u8 {
+    let mut result = 0u8;
+
+    while data_b != 0 {
+        if (data_b & 1) != 0 {
+            result ^= data_a;
+        }
+
+        data_a = multiple_by_x(data_a);
+        data_b >>= 1;
+    }
+
+    result
+}
+fn multiple_by_x(a: u8) -> u8 {
+    if (a & 0x80) != 0 {
+        (a << 1) ^ 0x1d
+    } else {
+        a << 1
+    }
 }
 
-pub fn gf_add(data_a: u8, data_b: u8) -> u8 {
-    todo!()
+fn get_bits(data: u8) -> Vec<u8> {
+    (0..8).map(|i| get_bit(i, data)).collect::<Vec<u8>>()
+}
+
+#[inline(always)]
+fn get_bit(index: usize, data: u8) -> u8 {
+    (data >> index) & 1
+}
+
+fn gf_add(data_a: u8, data_b: u8) -> u8 {
+    data_a ^ data_b
+}
+
+#[cfg(test)]
+pub mod test {
+    use super::*;
+
+    #[test]
+    fn test_gf_multiplication() {
+        let a = 7u8;
+        let b = 2u8;
+
+        assert_eq!(14u8, gf_multiplication(a, b));
+    }
 }
