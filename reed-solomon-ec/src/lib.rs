@@ -71,9 +71,16 @@ pub mod test {
 
     #[test]
     fn test_gf_multiplication() {
-        let a = 7u8;
-        let b = 2u8;
+        let a = 7;
+        let b = 2;
 
-        assert_eq!(14u8, gf_multiplication(a, b));
+        assert_eq!(14, gf_multiplication(a, b));
+    }
+
+    #[test]
+    fn test_get_bits() {
+        let data = 0;
+
+        assert_eq!([0u8; 8], *get_bits(data).as_array().unwrap());
     }
 }
