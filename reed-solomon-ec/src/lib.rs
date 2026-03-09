@@ -80,7 +80,9 @@ pub mod test {
     #[test]
     fn test_get_bits() {
         let data = 0;
+        let first_bit_1 = 0x80;
 
         assert_eq!([0u8; 8], *get_bits(data).as_array().unwrap());
+        assert_eq!(1, get_bit(7, first_bit_1));
     }
 }
