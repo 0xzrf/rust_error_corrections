@@ -1,10 +1,10 @@
-pub fn build_data_to_send(data: Vec<u8>, theta: Option<u8>) -> Vec<u8> {
+pub fn build_data_to_send(data: Vec<u8>, parity_symbol: usize, theta: Option<u8>) -> Vec<u8> {
     let theta = theta.unwrap_or(2);
 
     let mut data_to_send: Vec<u8> = vec![];
-    let redundant_data = data.len().checked_div(2).unwrap_or(5);
+
     let mut i: usize = 0;
-    while i < data.len() + redundant_data {
+    while i < data.len() + parity_symbol {
         data_to_send.push(build_polynomial(&data, gf_pow(theta, (i % 255) as u8)));
         i += 1;
     }
